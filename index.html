@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C6 Aerospace</title>
+  <meta name="description"
+    content="Student-led precision rocketry. Active airbrake control, model-predictive guidance, and custom avionics — UKROC 2026.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --void: #0a0a0b;
+      --carbon: #111113;
+      --graphite: #1a1a1e;
+      --steel: #2a2a30;
+      --ash: #6b6b76;
+      --silver: #a0a0ad;
+      --cloud: #e0e0e8;
+      --white: #f5f5f7;
+      --accent: #e64097;
+      --accent-light: #f472b6;
+      --accent-dim: rgba(230, 64, 151, 0.15);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    ::selection {
+      background: var(--accent-dim);
+      color: var(--white);
+    }
+
+    body {
+      background: var(--void);
+      color: var(--cloud);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      animation: fadeUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .d1 {
+      animation-delay: 0.1s;
+    }
+
+    .d2 {
+      animation-delay: 0.25s;
+    }
+
+    .d3 {
+      animation-delay: 0.4s;
+    }
+
+    .d4 {
+      animation-delay: 0.55s;
+    }
+
+    .d5 {
+      animation-delay: 0.7s;
+    }
+
+    .d6 {
+      animation-delay: 0.85s;
+    }
+
+    /* ── Logo ── */
+    .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 24px;
+      color: var(--white);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .logo .accent {
+      color: var(--accent);
+    }
+
+    .logo-rule {
+      width: 64px;
+      height: 1px;
+      background: var(--steel);
+      margin: 6px auto;
+    }
+
+    .logo-sub {
+      font-family: 'DM Serif Display', serif;
+      font-size: 16px;
+      color: var(--silver);
+      letter-spacing: 0.04em;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    /* ── Neofetch card ── */
+    .neofetch {
+      background: var(--carbon);
+      border: 1px solid var(--steel);
+      border-radius: 12px;
+      padding: 32px 36px;
+      max-width: 740px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .neofetch-inner {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+    }
+
+    .ascii {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      line-height: 1.35;
+      white-space: pre;
+      flex-shrink: 0;
+      color: var(--accent);
+    }
+
+    .ascii .title {
+      color: var(--white);
+      font-size: 11px;
+    }
+
+    .specs {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      line-height: 1.85;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .specs .host {
+      padding-bottom: 6px;
+      margin-bottom: 6px;
+      border-bottom: 1px solid var(--steel);
+    }
+
+    .specs .key {
+      color: var(--accent);
+    }
+
+    .specs .sep {
+      color: var(--steel);
+    }
+
+    .specs .val {
+      color: var(--silver);
+    }
+
+    .specs .host-name {
+      color: var(--white);
+    }
+
+    .specs .host-at {
+      color: var(--ash);
+    }
+
+    .swatches {
+      display: flex;
+      gap: 4px;
+      margin-top: 14px;
+    }
+
+    .swatch {
+      width: 18px;
+      height: 9px;
+      border-radius: 2px;
+    }
+
+    .cursor-block {
+      display: inline-block;
+      width: 7px;
+      height: 13px;
+      background: var(--accent);
+      margin-left: 4px;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+
+    /* ── Tagline ── */
+    .tagline {
+      text-align: center;
+      margin-top: 48px;
+      max-width: 520px;
+    }
+
+    .tagline h2 {
+      font-family: 'DM Serif Display', serif;
+      font-weight: 400;
+      font-size: clamp(24px, 4vw, 36px);
+      line-height: 1.1;
+      color: var(--white);
+      letter-spacing: 0.01em;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      margin-bottom: 14px;
+    }
+
+    .tagline p {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--silver);
+    }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 56px;
+      text-align: center;
+    }
+
+    .footer .status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--ash);
+      letter-spacing: 0.06em;
+      margin-bottom: 20px;
+    }
+
+    .footer .status .dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-right: 6px;
+      vertical-align: middle;
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    .footer .links {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .footer .links a {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--silver);
+      text-decoration: none;
+      padding: 10px 20px;
+      border: 1px solid var(--steel);
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .footer .links a:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .footer .links a.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--white);
+    }
+
+    .footer .links a.primary:hover {
+      background: var(--accent-light);
+      border-color: var(--accent-light);
+    }
+
+    .bottom {
+      margin-top: 48px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--ash);
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 640px) {
+      .neofetch {
+        padding: 24px 20px;
+      }
+
+      .neofetch-inner {
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .ascii {
+        font-size: 8px;
+      }
+
+      .specs {
+        font-size: 11px;
+      }
+
+      body {
+        padding: 32px 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Logo -->
+  <div class="logo reveal d1">C6 <span class="accent">//</span></div>
+  <div class="logo-rule reveal d1"></div>
+  <div class="logo-sub reveal d1">Aerospace</div>
+
+  <!-- Neofetch -->
+  <div class="neofetch reveal d2">
+    <div class="neofetch-inner">
+      <div class="ascii">
+        <span class="title">C6 Aerospace</span>
+        ███████╗███╗ ███╗██████╗
+        ██╔════╝████╗ ████║██╔══██╗
+        █████╗ ██╔████╔██║██████╔╝
+        ██╔══╝ ██║╚██╔╝██║██╔══██╗
+        ███████╗██║ ╚═╝ ██║██████╔╝
+        ╚══════╝╚═╝ ╚═╝╚═════╝
+        --- powered by ---
+        ___ ___ __
+        | __|/ __|/ /
+        | _|| (__/ _ \
+        |_| \___\___/ v0.4
+      </div>
+      <div class="specs">
+        <div class="host">
+          <span class="key">c6</span><span class="host-at">@</span><span class="host-name">s208</span>
+        </div>
+        <div><span class="key">vehicle</span><span class="sep"> ~ </span><span class="val">S-IX · 57mm carbon
+            fibre</span></div>
+        <div><span class="key">board</span><span class="sep"> ~ </span><span class="val">EMB Rev B</span></div>
+        <div><span class="key">mcu</span><span class="sep"> ~ </span><span class="val">RP2350A @ 150MHz</span></div>
+        <div><span class="key">cores</span><span class="sep"> ~ </span><span class="val">2 (RT + IO)</span></div>
+        <div><span class="key">guidance</span><span class="sep"> ~ </span><span class="val">MPC · binary search /
+            RK4</span></div>
+        <div><span class="key">loop</span><span class="sep"> ~ </span><span class="val">50Hz (42ms deadline)</span>
+        </div>
+        <div><span class="key">fsm</span><span class="sep"> ~ </span><span class="val">11 states · timer-backed</span>
+        </div>
+        <div><span class="key">logging</span><span class="sep"> ~ </span><span class="val">CarbonLog (binary
+            append)</span></div>
+        <div><span class="key">target</span><span class="sep"> ~ </span><span class="val">228.6m (750ft)</span></div>
+        <div><span class="key">motor</span><span class="sep"> ~ </span><span class="val">Aerotech F-class APCP</span>
+        </div>
+        <div><span class="key">team</span><span class="sep"> ~ </span><span class="val">4 · Abingdon School</span></div>
+        <div><span class="key">comp</span><span class="sep"> ~ </span><span class="val">UKROC 2026</span></div>
+        <div class="swatches">
+          <div class="swatch" style="background:#e64097"></div>
+          <div class="swatch" style="background:#f472b6"></div>
+          <div class="swatch" style="background:#4ade80"></div>
+          <div class="swatch" style="background:#fb923c"></div>
+          <div class="swatch" style="background:#60a5fa"></div>
+          <div class="swatch" style="background:#a78bfa"></div>
+          <div class="swatch" style="background:#f5f5f7"></div>
+          <div class="swatch" style="background:#6b6b76"></div>
+        </div>
+        <div style="margin-top:14px">
+          <span class="key">$</span><span class="cursor-block"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tagline -->
+  <div class="tagline reveal d3">
+    <h2>Precision rocketry<span style="color:var(--accent)">.</span><br>Built by students<span
+        style="color:var(--accent)">.</span></h2>
+    <p>Active airbrake control, model-predictive guidance, and custom avionics - targeting 228.6m with centimetre
+      accuracy. What's a foot?
+    </p>
+  </div>
+
+  <!-- Status + CTAs -->
+  <div class="footer reveal d4">
+    <div class="status"><span class="dot"></span>Full site in development</div>
+  </div>
+
+  <div class="bottom reveal d5">Abingdon School · Oxford Brookes University</div>
+
+</body>
+
+</html>
